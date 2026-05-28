@@ -9,7 +9,7 @@ updated: 2026-05-27
 
 ## 0. Document Purpose
 
-This PRD is for the PM, stakeholders, and downstream workflow owners involved in the first product effort for turbo-test. It is structured with a Glossary-anchored vocabulary, features grouped with globally numbered FRs nested under them, and assumptions tagged inline and indexed in §9. It is informed by the problem space analysis and problem statement in `_bmad-output/planning-artifacts/`. It describes capabilities only — mechanism and technology decisions are deferred to the solution design phase.
+This PRD is for the PM, stakeholders, and downstream workflow owners involved in the first product effort for turbo-test. It is structured with a Glossary-anchored vocabulary, features grouped with globally numbered FRs nested under them, and assumptions tagged inline and indexed in §9. It is informed by the problem space analysis, problem statement, and refined problem statement in `_bmad-output/planning-artifacts/`. It describes capabilities only — mechanism and technology decisions are deferred to the solution design phase.
 
 ---
 
@@ -17,7 +17,7 @@ This PRD is for the PM, stakeholders, and downstream workflow owners involved in
 
 **Executive summary**
 
-Alex's business has outgrown the spreadsheet holding it together. This is the first step toward replacing it — establishing a single, reliable source of product and pricing data so that order entry is consistent, corrections drop, and every automation that follows is built on something the team can trust.
+Alex's business has outgrown the spreadsheet holding it together. Four distinct problems were identified: unreliable master data (Problem 1), people serving as middleware between disconnected systems (Problem 2), compliance controls detached from the workflow (Problem 3), and critical process knowledge existing only in people's heads (Problem 4). This product attacks Problem 1 — establishing a single, reliable source of product and pricing data so that order entry is consistent, corrections drop, and every automation that follows is built on something the team can trust. Problems 2–4 are explicitly deferred and sequenced in later stages.
 
 ---
 
@@ -26,6 +26,8 @@ Alex's business runs on a workflow that was never designed to scale. Patient ord
 The immediate goal is narrow and deliberate: establish a single, reliable source of product and pricing data, and deliver it through the first order entry form that consumes it. For Alex's team, this means one workflow becomes noticeably more organized — less reprocessing, fewer corrections, and less dependence on any individual's knowledge of the rules.
 
 The strategic weight is larger than the scope. Every improvement Alex wants downstream — automated vendor routing, document generation, compliance controls — is only safe to build once the data underneath it is trustworthy. This first step is what makes the rest of the roadmap buildable. Done right, it begins moving the business from a fragile, people-dependent operation toward one where the system carries the rules and the team focuses on the work.
+
+The Order Entry Form is not a separate problem from the data layer — it is the enforcement mechanism that closes the behavioral loop. The canonical catalog and fee schedule make the data reliable; the Form makes employees consume that reliable data instead of the legacy spreadsheet. Without the Form, the data fix is structural but not operational. All three components — Product Catalog, Fee Schedule, Order Entry Form — are necessary to fully resolve Problem 1.
 
 ---
 
@@ -183,15 +185,23 @@ The system must record who submitted each Order and when.
 
 ## 5. Non-Goals
 
-What this product will not do in this delivery:
+What this product will not do in this delivery. Each deferral is a deliberate sequencing decision — not a scope cut — tied to one of the four identified problems:
 
+**Problem 2 — Integration (Stage 2):** These capabilities require a stable data foundation before automation is safe to build on top of it.
 - Generate documents — encounter forms, patient invoices, and proofs of delivery are not produced by this system in v1
 - Automate vendor communication — Orders are not routed or emailed to Vendors automatically
+
+**Problem 3 — Governance (Stage 3):** Compliance controls can only be reliably enforced once the underlying data layer is trustworthy. Enforcing rules against unreliable data would produce false confidence, not compliance.
 - Enforce approval gates — HCPCS codes flagged as requiring manager approval are captured in the catalog but the approval workflow is not enforced
 - Track prior authorization — prior auth rules are not enforced or surfaced during order entry
+
+**Problem 4 — Knowledge (Stage 4):** These require the core system to be stable before undocumented process knowledge can be progressively encoded into it.
+- Document and encode tribal knowledge — vendor routing logic, pricing edge cases, and process exceptions exist only in people's heads; encoding them is deferred until the system can carry them reliably
+- Support measurement form uploads per Line Item
+
+**Out of scope regardless of stage:**
 - Replace DocuSign or payment flows — patient signatures and payment collection are out of scope
 - Manage Self-Pay pricing rules beyond MSRP defaulting
-- Support measurement form uploads per Line Item
 
 ---
 
@@ -207,16 +217,16 @@ What this product will not do in this delivery:
 
 ### 6.2 Out of Scope for MVP
 
-| Capability                                         | Deferred To                                                 |
-| -------------------------------------------------- | ----------------------------------------------------------- |
-| Automated vendor routing and order emailing        | Stage 2                                                     |
-| Document generation (encounter form, invoice, POD) | Stage 2                                                     |
-| Manager approval gate enforcement for HCPCS codes  | Stage 3                                                     |
-| Prior authorization tracking and enforcement       | Stage 3                                                     |
-| Measurement form uploads per Line Item             | Stage 4                                                     |
-| Tribal knowledge documentation                     | Stage 4                                                     |
-| Self-Pay pricing configuration beyond MSRP         | Stage 4                                                     |
-| Fragmented workflow consolidation across systems   | Progressive — resolved as each stage replaces a manual step |
+| Capability                                         | Problem          | Deferred To                                                 |
+| -------------------------------------------------- | ---------------- | ----------------------------------------------------------- |
+| Automated vendor routing and order emailing        | P2 — Integration | Stage 2                                                     |
+| Document generation (encounter form, invoice, POD) | P2 — Integration | Stage 2                                                     |
+| Manager approval gate enforcement for HCPCS codes  | P3 — Governance  | Stage 3                                                     |
+| Prior authorization tracking and enforcement       | P3 — Governance  | Stage 3                                                     |
+| Tribal knowledge encoding (routing, pricing rules) | P4 — Knowledge   | Stage 4                                                     |
+| Measurement form uploads per Line Item             | P4 — Knowledge   | Stage 4                                                     |
+| Self-Pay pricing configuration beyond MSRP         | P4 — Knowledge   | Stage 4                                                     |
+| Fragmented workflow consolidation across systems   | P2 + P3 + P4     | Progressive — resolved as each stage replaces a manual step |
 
 ---
 
