@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex's Order Management System — Mockups</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #DBEAFE;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+    --border: #E5E7EB;
+    --shadow: 0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── CHROME ── */
+  .app-chrome {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+
+  .topbar-brand {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--blue);
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+
+  .topbar-brand span {
+    color: var(--gray-500);
+    font-weight: 400;
+    margin-left: 6px;
+    font-size: 12px;
+  }
+
+  .screen-nav {
+    display: flex;
+    gap: 2px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 3px;
+  }
+
+  .screen-nav button {
+    padding: 6px 16px;
+    border: none;
+    background: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .screen-nav button.active {
+    background: white;
+    color: var(--gray-800);
+    box-shadow: var(--shadow);
+  }
+
+  .screen-nav button:hover:not(.active) {
+    color: var(--gray-700);
+    background: var(--gray-200);
+  }
+
+  .screen-label {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--gray-400);
+    font-style: italic;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; padding: 24px; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .screen.active { display: block; }
+
+  /* ── SHARED COMPONENTS ── */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .page-title { font-size: 20px; font-weight: 700; color: var(--gray-900); }
+  .page-subtitle { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-primary { background: var(--blue); color: white; }
+  .btn-primary:hover { background: #1D4ED8; }
+  .btn-secondary { background: white; color: var(--gray-700); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--gray-50); }
+  .btn-ghost { background: none; color: var(--blue); padding: 6px 10px; font-size: 13px; }
+  .btn-danger { background: var(--red-light); color: var(--red); border: 1px solid #FECACA; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-grid { display: grid; gap: 16px; }
+  .form-grid-2 { grid-template-columns: 1fr 1fr; }
+  .form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .form-field { display: flex; flex-direction: column; gap: 5px; }
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .form-label.required::after { content: " *"; color: var(--red); }
+
+  .form-input, .form-select {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--gray-800);
+    background: white;
+    outline: none;
+    transition: border 0.15s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  .form-input.readonly, .form-input[readonly] {
+    background: var(--gray-50);
+    color: var(--gray-500);
+    cursor: default;
+  }
+  .form-input.auto-filled {
+    background: var(--blue-light);
+    color: var(--blue);
+    border-color: #BFDBFE;
+    font-weight: 600;
+  }
+  .form-input.calc-field {
+    background: var(--green-light);
+    color: var(--green);
+    border-color: #BBF7D0;
+    font-weight: 600;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-gray { background: var(--gray-100); color: var(--gray-500); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* ── SCREEN 1: ORDER ENTRY ── */
+  .payment-toggle {
+    display: flex;
+    gap: 0;
+    background: var(--gray-100);
+    border-radius: 7px;
+    padding: 3px;
+  }
+  .payment-toggle button {
+    flex: 1;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--gray-500);
+    background: none;
+    transition: all 0.15s;
+  }
+  .payment-toggle button.active {
+    background: white;
+    color: var(--blue);
+    font-weight: 600;
+    box-shadow: var(--shadow);
+  }
+
+  .section-gap { margin-bottom: 16px; }
+
+  .line-items-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .line-items-table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-align: left;
+    padding: 8px 10px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .line-items-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: middle;
+  }
+  .line-items-table tr:last-child td { border-bottom: none; }
+
+  .col-product { width: 26%; }
+  .col-hcpcs { width: 10%; }
+  .col-uom { width: 7%; }
+  .col-qty { width: 7%; }
+  .col-price { width: 11%; }
+  .col-cost { width: 11%; }
+  .col-margin { width: 11%; }
+  .col-action { width: 5%; }
+
+  .add-line-row {
+    background: var(--gray-50);
+    border-top: 1px dashed var(--gray-300);
+  }
+
+  .summary-bar {
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-top: 16px;
+  }
+  .summary-item { display: flex; flex-direction: column; gap: 2px; }
+  .summary-label { font-size: 11px; color: var(--gray-500); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .summary-value { font-size: 18px; font-weight: 700; color: var(--gray-900); }
+  .summary-value.green { color: var(--green); }
+  .summary-divider { width: 1px; height: 36px; background: var(--border); }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .auto-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--blue);
+    background: var(--blue-light);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* ── SCREEN 2: PRODUCT CATALOG ── */
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .search-input-wrap {
+    flex: 1;
+    position: relative;
+  }
+  .search-input-wrap input {
+    width: 100%;
+    height: 36px;
+    padding: 0 10px 0 34px;
+    border: 1px solid var(--gray-300);
+    border-radius: 7px;
+    font-size: 13px;
+    background: white;
+  }
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    font-size: 14px;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .data-table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+  .data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+  }
+  .data-table tr:hover td { background: var(--gray-50); }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .product-name { font-weight: 600; color: var(--gray-900); }
+  .product-vendor { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+
+  .approval-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--amber);
+  }
+
+  /* ── SCREEN 3: FEE SCHEDULE ── */
+  .fee-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .rule-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .rule-card:hover { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
+  .rule-card.selected { border-color: var(--blue); background: var(--blue-light); box-shadow: 0 0 0 3px rgba(37,99,235,0.10); }
+
+  .rule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .rule-title { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+  .rule-formula {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+  .rule-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .rule-tag {
+    font-size: 11px;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .rate-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .rate-preview-table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .rate-preview-table td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+  }
+  .rate-preview-table tr:last-child td { border-bottom: none; }
+  .rate-preview-table tr:hover td { background: var(--gray-50); }
+  .rate-computed { font-weight: 700; color: var(--green); }
+
+  .rule-editor {
+    background: var(--blue-light);
+    border: 1px solid #BFDBFE;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 16px;
+  }
+  .rule-editor-title { font-size: 14px; font-weight: 700; color: var(--blue); margin-bottom: 16px; }
+
+  .callout {
+    background: var(--amber-light);
+    border: 1px solid #FCD34D;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--gray-700);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 16px;
+  }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .empty-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--gray-400);
+    font-size: 13px;
+    gap: 8px;
+  }
+  .empty-select .empty-icon { font-size: 32px; }
+
+</style>
+</head>
+<body>
+
+<div class="app-chrome">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-brand">MedOps <span>Order Management</span></div>
+    <div class="screen-nav">
+      <button class="active" onclick="showScreen('order-entry', this)">📋 New Order</button>
+      <button onclick="showScreen('product-catalog', this)">📦 Product Catalog</button>
+      <button onclick="showScreen('fee-schedule', this)">💰 Fee Schedule</button>
+    </div>
+    <div class="screen-label">Mockup · v0.1 · for Alex</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SCREEN 1: ORDER ENTRY FORM -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="screen-order-entry" class="screen active">
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">New Patient Order</div>
+        <div class="page-subtitle">Fill in patient info and add products — pricing populates automatically</div>
+      </div>
+      <button class="btn btn-secondary btn-sm">← Back to Orders</button>
+    </div>
+
+    <!-- PATIENT INFORMATION -->
+    <div class="card section-gap">
+      <div class="card-title">Patient Information</div>
+      <div class="form-grid form-grid-2">
+        <div class="form-field">
+          <label class="form-label required">Patient Name</label>
+          <input class="form-input" type="text" placeholder="e.g. Maria Gonzalez" value="Maria Gonzalez">
+        </div>
+        <div class="form-field">
+          <label class="form-label required">Insurance / Payer</label>
+          <select class="form-select">
+            <option>Aetna Medicare Advantage</option>
+            <option>BlueCross BlueShield</option>
+            <option>United Healthcare</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label required">Shipping Address</label>
+          <input class="form-input" type="text" value="1420 NW 87th Ave, Miami, FL 33172">
+        </div>
+        <div class="form-field">
+          <label class="form-label required">ZIP Code</label>
+          <input class="form-input" type="text" value="33172" style="max-width:140px">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="form-field" style="max-width: 300px;">
+        <label class="form-label required">Payment Type</label>
+        <div class="payment-toggle">
+          <button class="active">🏥 Insurance</button>
+          <button>💳 Self-Pay</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINE ITEMS -->
+    <div class="card section-gap">
+      <div class="card-title">
+        Products / Line Items
+        <span style="color:var(--gray-400); font-weight:400; text-transform:none; font-size:12px; margin-left:8px;">Pricing and billing fields fill in automatically when you select a product.</span>
+      </div>
+
+      <table class="line-items-table">
+        <thead>
+          <tr>
+            <th class="col-product">Product</th>
+            <th class="col-hcpcs">HCPCS</th>
+            <th class="col-uom">UoM</th>
+            <th class="col-qty">Qty</th>
+            <th class="col-price">Unit Price <span class="auto-tag">AUTO</span></th>
+            <th class="col-cost">Unit Cost <span class="auto-tag">AUTO</span></th>
+            <th class="col-margin margin-col">
+            Margin <span class="auto-tag">AUTO</span>
+            <button onclick="toggleMargin()" id="margin-toggle" title="Hide margin from employees" style="margin-left:6px; background:none; border:none; cursor:pointer; font-size:13px; vertical-align:middle; color:var(--gray-400);" title="Toggle margin visibility">👁</button>
+          </th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- LINE ITEM 1 -->
+          <tr>
+            <td>
+              <select class="form-select">
+                <option>Jobst Elvarex Arm Sleeve — Class II</option>
+              </select>
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="L8100">
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="EA">
+            </td>
+            <td>
+              <input class="form-input" type="number" value="2" style="max-width:60px">
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="$142.50">
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="$78.00">
+            </td>
+            <td class="margin-col">
+              <input class="form-input calc-field" readonly value="$129.00">
+            </td>
+            <td>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)">✕</button>
+            </td>
+          </tr>
+
+          <!-- LINE ITEM 2 -->
+          <tr>
+            <td>
+              <select class="form-select">
+                <option>Sigvaris 860 Gauntlet — Medium</option>
+              </select>
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="L8140">
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="EA">
+            </td>
+            <td>
+              <input class="form-input" type="number" value="1">
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="$58.90">
+            </td>
+            <td>
+              <input class="form-input auto-filled" readonly value="$31.00">
+            </td>
+            <td class="margin-col">
+              <input class="form-input calc-field" readonly value="$27.90">
+            </td>
+            <td>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)">✕</button>
+            </td>
+          </tr>
+
+          <!-- ADD ANOTHER -->
+          <tr class="add-line-row">
+            <td colspan="8" style="padding:10px">
+              <button class="btn btn-ghost" style="font-size:13px">+ Add another product</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ORDER SUMMARY -->
+      <div class="summary-bar">
+        <div class="summary-item">
+          <div class="summary-label">Total Billable</div>
+          <div class="summary-value">$344.90</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <div class="summary-label">Total Cost</div>
+          <div class="summary-value">$187.00</div>
+        </div>
+        <div class="summary-divider margin-col"></div>
+        <div class="summary-item margin-col">
+          <div class="summary-label">Total Margin</div>
+          <div class="summary-value green">$156.90</div>
+        </div>
+        <div class="summary-divider margin-col"></div>
+        <div class="summary-item margin-col">
+          <div class="summary-label">Margin %</div>
+          <div class="summary-value green">45.5%</div>
+        </div>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:8px; color:var(--gray-400); font-size:12px;">
+          <span>📅</span>
+          <span>Order received: 2026-05-27, 10:42 AM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM ACTIONS -->
+    <div class="form-actions">
+      <button class="btn btn-secondary">Save as Draft</button>
+      <button class="btn btn-primary">Submit Order →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SCREEN 2: PRODUCT CATALOG -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="screen-product-catalog" class="screen">
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Product Catalog</div>
+        <div class="page-subtitle">78 active products · Single source of truth for all order entry</div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-secondary">⬆ Import from Excel</button>
+        <button class="btn btn-primary">+ Add Product</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search by name, vendor, HCPCS code…" value="jobst">
+        </div>
+        <select class="form-select" style="max-width:160px">
+          <option>All Categories</option>
+          <option>Compression Garments</option>
+          <option>Orthopedic Supports</option>
+          <option>Prosthetics</option>
+        </select>
+        <select class="form-select" style="max-width:140px">
+          <option>All Vendors</option>
+          <option>Jobst</option>
+          <option>Sigvaris</option>
+          <option>Medi USA</option>
+        </select>
+        <select class="form-select" style="max-width:120px">
+          <option>Active only</option>
+          <option>All products</option>
+          <option>Inactive</option>
+        </select>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:28%">Product</th>
+            <th style="width:11%">HCPCS</th>
+            <th style="width:13%">Category</th>
+            <th style="width:7%">UoM</th>
+            <th style="width:10%">Unit Cost</th>
+            <th style="width:8%">MSRP</th>
+            <th style="width:10%">Approval</th>
+            <th style="width:8%">Status</th>
+            <th style="width:5%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="product-name">Jobst Elvarex Arm Sleeve — Class II</div>
+              <div class="product-vendor">Jobst</div>
+            </td>
+            <td><span class="badge badge-blue">L8100</span></td>
+            <td>Compression Garments</td>
+            <td>EA</td>
+            <td>$78.00</td>
+            <td>$185.00</td>
+            <td>—</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-name">Jobst Elvarex Arm Sleeve — Class III</div>
+              <div class="product-vendor">Jobst</div>
+            </td>
+            <td><span class="badge badge-blue">L8100</span></td>
+            <td>Compression Garments</td>
+            <td>EA</td>
+            <td>$92.00</td>
+            <td>$210.00</td>
+            <td>—</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-name">Jobst Bella Lite Arm Sleeve — Beige</div>
+              <div class="product-vendor">Jobst</div>
+            </td>
+            <td><span class="badge badge-blue">L8100</span></td>
+            <td>Compression Garments</td>
+            <td>EA</td>
+            <td>$44.50</td>
+            <td>$98.00</td>
+            <td>—</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-name">Jobst Relief Thigh-High — 20–30 mmHg</div>
+              <div class="product-vendor">Jobst</div>
+            </td>
+            <td><span class="badge badge-blue">A6531</span></td>
+            <td>Compression Garments</td>
+            <td>PR</td>
+            <td>$29.00</td>
+            <td>$64.00</td>
+            <td><span class="approval-flag">⚠ Requires approval</span></td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-name">Jobst Elvarex Glove — Class I</div>
+              <div class="product-vendor">Jobst</div>
+            </td>
+            <td><span class="badge badge-blue">L8140</span></td>
+            <td>Compression Garments</td>
+            <td>EA</td>
+            <td>$38.00</td>
+            <td>$84.00</td>
+            <td>—</td>
+            <td><span class="badge badge-amber">Inactive</span></td>
+            <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px solid var(--border);">
+        <div style="font-size:12px; color:var(--gray-400)">Showing 5 of 12 results for "jobst"</div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-secondary btn-sm">← Previous</button>
+          <button class="btn btn-secondary btn-sm">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="background:var(--blue-light); border-color:#BFDBFE; margin-top:16px;">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong style="color:var(--blue)">Initial setup:</strong> <span style="color:var(--gray-600)">Use <em>Import from Excel</em> to seed the catalog from your historical order data. The system reads your existing spreadsheet and pre-populates every product ever ordered — you review and clean up rather than building from scratch.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SCREEN 3: FEE SCHEDULE -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="screen-fee-schedule" class="screen">
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Fee Schedule</div>
+        <div class="page-subtitle">Rule-based pricing — define once, applies to all matching combinations</div>
+      </div>
+      <button class="btn btn-primary" onclick="newRule()">+ New Rule</button>
+    </div>
+
+    <div class="fee-layout">
+
+      <!-- LEFT: RULE LIST -->
+      <div>
+        <div style="font-size:11px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">7 Rules · Click a rule to see resolved rates</div>
+
+        <div class="rule-card selected" onclick="selectRule(this)">
+          <div class="rule-header">
+            <div class="rule-title">Aetna · Compression Garments</div>
+            <div class="rule-formula">Base × 1.15</div>
+          </div>
+          <div class="rule-tags">
+            <span class="rule-tag">Payer: Aetna Medicare Advantage</span>
+            <span class="rule-tag">Category: Compression Garments</span>
+            <span class="rule-tag">ZIP: Non-Rural</span>
+          </div>
+        </div>
+
+        <div class="rule-card" onclick="selectRule(this)">
+          <div class="rule-header">
+            <div class="rule-title">Aetna · Compression Garments (Rural)</div>
+            <div class="rule-formula">Base × 1.28</div>
+          </div>
+          <div class="rule-tags">
+            <span class="rule-tag">Payer: Aetna Medicare Advantage</span>
+            <span class="rule-tag">Category: Compression Garments</span>
+            <span class="rule-tag">ZIP: Rural</span>
+          </div>
+        </div>
+
+        <div class="rule-card" onclick="selectRule(this)">
+          <div class="rule-header">
+            <div class="rule-title">BlueCross · All Products</div>
+            <div class="rule-formula">Base × 1.00</div>
+          </div>
+          <div class="rule-tags">
+            <span class="rule-tag">Payer: BlueCross BlueShield</span>
+            <span class="rule-tag">All Categories</span>
+            <span class="rule-tag">All ZIPs</span>
+          </div>
+        </div>
+
+        <div class="rule-card" onclick="selectRule(this)">
+          <div class="rule-header">
+            <div class="rule-title">United · Orthotics</div>
+            <div class="rule-formula">Base × 0.92</div>
+          </div>
+          <div class="rule-tags">
+            <span class="rule-tag">Payer: United Healthcare</span>
+            <span class="rule-tag">Category: Orthopedic Supports</span>
+            <span class="rule-tag">All ZIPs</span>
+          </div>
+        </div>
+
+        <div class="rule-card" onclick="selectRule(this)">
+          <div class="rule-header">
+            <div class="rule-title">Self-Pay · All Products</div>
+            <div class="rule-formula">MSRP</div>
+          </div>
+          <div class="rule-tags">
+            <span class="rule-tag">Payment: Self-Pay</span>
+            <span class="rule-tag">All Categories</span>
+            <span class="rule-tag">All ZIPs</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: DETAIL PANEL -->
+      <div>
+
+        <!-- STATE A: EDITING EXISTING RULE -->
+        <div id="panel-edit">
+          <div class="rule-editor" style="margin-bottom:16px;">
+            <div class="rule-editor-title">✏️ Editing: Aetna · Compression Garments</div>
+            <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+              <div class="form-field">
+                <label class="form-label">Payer</label>
+                <select class="form-select">
+                  <option>Aetna Medicare Advantage</option>
+                  <option>BlueCross BlueShield</option>
+                  <option>United Healthcare</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Product Category</label>
+                <select class="form-select">
+                  <option>Compression Garments</option>
+                  <option>Orthopedic Supports</option>
+                  <option>All Categories</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">ZIP Type</label>
+                <select class="form-select">
+                  <option>Non-Rural</option>
+                  <option>Rural</option>
+                  <option>All</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Multiplier</label>
+                <input class="form-input" type="text" value="1.15">
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+              <button class="btn btn-secondary btn-sm">Cancel</button>
+              <button class="btn btn-primary btn-sm">Save Rule</button>
+            </div>
+          </div>
+
+          <!-- RESOLVED RATES PREVIEW -->
+          <div class="card">
+            <div class="card-title">Resolved Rates — Aetna · Compression Garments · Non-Rural ZIPs</div>
+            <div style="font-size:12px; color:var(--gray-500); margin-bottom:12px; margin-top:-8px;">
+              This rule applies to <strong>23 products</strong> across <strong>3 HCPCS codes</strong>. Computed rates update automatically when you change the multiplier.
+            </div>
+            <table class="rate-preview-table">
+              <thead>
+                <tr>
+                  <th>HCPCS</th>
+                  <th>Description</th>
+                  <th>Base Rate</th>
+                  <th>Multiplier</th>
+                  <th>Billable Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-blue">L8100</span></td>
+                  <td>Custom Fabricated Gradient Compression Sleeve</td>
+                  <td>$123.91</td>
+                  <td>1.15</td>
+                  <td class="rate-computed">$142.50</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-blue">L8110</span></td>
+                  <td>Gradient Compression Glove</td>
+                  <td>$51.22</td>
+                  <td>1.15</td>
+                  <td class="rate-computed">$58.90</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-blue">L8140</span></td>
+                  <td>Custom Fabricated Elbow Gauntlet</td>
+                  <td>$71.48</td>
+                  <td>1.15</td>
+                  <td class="rate-computed">$82.20</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout">
+            <span class="callout-icon">💡</span>
+            <div>
+              <strong>How rules work:</strong> When a new Aetna patient in Miami orders a compression sleeve, the system finds this rule (Payer: Aetna + Category: Compression Garments + ZIP 33172 = Non-Rural) and applies the 1.15× multiplier automatically. Add a new Aetna patient in a rural ZIP and it picks the <em>Rural rule</em> instead — no manual rate lookup needed.
+            </div>
+          </div>
+        </div>
+
+        <!-- STATE B: CREATING NEW RULE -->
+        <div id="panel-new" style="display:none;">
+          <div class="rule-editor" style="margin-bottom:16px; background:var(--green-light); border-color:#BBF7D0;">
+            <div class="rule-editor-title" style="color:var(--green);">+ Creating New Rule</div>
+            <div style="font-size:12px; color:var(--gray-500); margin-bottom:14px;">Define the conditions — the system will apply this rate to every matching order automatically.</div>
+            <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+              <div class="form-field">
+                <label class="form-label required">Payer</label>
+                <select class="form-select">
+                  <option value="" disabled selected>Select payer…</option>
+                  <option>Aetna Medicare Advantage</option>
+                  <option>BlueCross BlueShield</option>
+                  <option>United Healthcare</option>
+                  <option>Self-Pay</option>
+                  <option>All Payers</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label required">Product Category</label>
+                <select class="form-select">
+                  <option value="" disabled selected>Select category…</option>
+                  <option>Compression Garments</option>
+                  <option>Orthopedic Supports</option>
+                  <option>Prosthetics</option>
+                  <option>All Categories</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label required">ZIP Type</label>
+                <select class="form-select" id="zip-type-select" onchange="onZipTypeChange(this)">
+                  <option value="" disabled selected>Select ZIP type…</option>
+                  <option value="non-rural">Non-Rural</option>
+                  <option value="rural">Rural</option>
+                  <option value="cba">Competitive Bidding Area</option>
+                  <option value="all">All</option>
+                  <option value="specific">Specific ZIP code…</option>
+                </select>
+                <div id="specific-zip-wrap" style="display:none; margin-top:8px;">
+                  <input class="form-input" id="specific-zip-input" type="text" placeholder="e.g. 33172" maxlength="5" style="max-width:120px;">
+                  <div style="margin-top:6px; font-size:11px; color:var(--amber); display:flex; gap:5px; align-items:flex-start;">
+                    <span>⚠</span>
+                    <span>Specific ZIP rules are exceptions — use them sparingly. Defining too many creates the same row-by-row maintenance problem the rule-based approach is designed to avoid.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="form-label required">Multiplier</label>
+                <input class="form-input" type="text" placeholder="e.g. 1.15">
+              </div>
+            </div>
+
+            <div style="background:white; border:1px solid #BBF7D0; border-radius:7px; padding:12px 14px; margin-bottom:14px; font-size:12px; color:var(--gray-600);">
+              <strong style="color:var(--gray-800);">Rule preview:</strong> Once you fill in all fields, this rule will compute
+              <span style="color:var(--blue); font-weight:600;">Base Rate × Multiplier</span>
+              for every order matching the selected Payer + Category + ZIP type combination.
+              New products added to this category will inherit this rule automatically.
+            </div>
+
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+              <button class="btn btn-secondary btn-sm" onclick="cancelNewRule()">Cancel</button>
+              <button class="btn btn-primary btn-sm" style="background:var(--green);">Save New Rule</button>
+            </div>
+          </div>
+
+          <div class="card" style="opacity:0.5;">
+            <div class="card-title">Resolved Rates</div>
+            <div class="empty-select">
+              <div class="empty-icon">📋</div>
+              <div>Fill in all fields above to preview which products and HCPCS codes this rule will cover.</div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <span class="callout-icon">💡</span>
+            <div>
+              <strong>Tip:</strong> Rules cascade — if a patient ZIP matches both a specific rule and a catch-all, the more specific rule wins. Use <em>All Categories</em> or <em>All ZIPs</em> as fallbacks when a payer has a flat rate across the board.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div><!-- end app-chrome -->
+
+<script>
+  var marginVisible = true;
+
+  function showScreen(id, btn) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function selectRule(card) {
+    document.querySelectorAll('.rule-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    document.getElementById('panel-edit').style.display = '';
+    document.getElementById('panel-new').style.display = 'none';
+  }
+
+  function toggleMargin() {
+    marginVisible = !marginVisible;
+    var cols = document.querySelectorAll('.margin-col');
+    cols.forEach(function(el) {
+      el.style.display = marginVisible ? '' : 'none';
+    });
+    var btn = document.getElementById('margin-toggle');
+    btn.textContent = marginVisible ? '👁' : '🙈';
+    btn.title = marginVisible ? 'Hide margin from employees' : 'Show margin';
+  }
+
+  function newRule() {
+    document.querySelectorAll('.rule-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('panel-edit').style.display = 'none';
+    document.getElementById('panel-new').style.display = '';
+  }
+
+  function onZipTypeChange(sel) {
+    var wrap = document.getElementById('specific-zip-wrap');
+    wrap.style.display = sel.value === 'specific' ? '' : 'none';
+    if (sel.value !== 'specific') {
+      document.getElementById('specific-zip-input').value = '';
+    }
+  }
+
+  function cancelNewRule() {
+    document.getElementById('panel-new').style.display = 'none';
+    document.getElementById('panel-edit').style.display = '';
+    // re-select first rule as default
+    var first = document.querySelector('.rule-card');
+    if (first) first.classList.add('selected');
+  }
+</script>
+
+</body>
+</html>

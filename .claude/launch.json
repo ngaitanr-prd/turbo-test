@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mockups",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3456", "design-artifacts/mockups"],
+      "port": 3456
+    }
+  ]
+}
