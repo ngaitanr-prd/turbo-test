@@ -539,8 +539,8 @@
           <input class="form-input" type="text" placeholder="e.g. Maria Gonzalez" value="Maria Gonzalez">
         </div>
         <div class="form-field">
-          <label class="form-label required">Insurance / Payer</label>
-          <select class="form-select">
+          <label class="form-label required" id="payer-label">Insurance / Payer</label>
+          <select class="form-select" id="payer-select">
             <option>Aetna Medicare Advantage</option>
             <option>BlueCross BlueShield</option>
             <option>United Healthcare</option>
@@ -561,8 +561,8 @@
       <div class="form-field" style="max-width: 300px;">
         <label class="form-label required">Payment Type</label>
         <div class="payment-toggle">
-          <button class="active">🏥 Insurance</button>
-          <button>💳 Self-Pay</button>
+          <button id="btn-insurance" class="active" onclick="setPaymentType('insurance')">🏥 Insurance</button>
+          <button id="btn-selfpay" onclick="setPaymentType('selfpay')">💳 Self-Pay</button>
         </div>
       </div>
     </div>
@@ -592,7 +592,7 @@
         </thead>
         <tbody>
           <!-- LINE ITEM 1 -->
-          <tr>
+          <tr class="line-item-row">
             <td>
               <select class="form-select">
                 <option>Jobst Elvarex Arm Sleeve — Class II</option>
@@ -605,24 +605,25 @@
               <input class="form-input auto-filled" readonly value="EA">
             </td>
             <td>
-              <input class="form-input" type="number" value="2" style="max-width:60px">
+              <input class="form-input li-qty" type="number" value="2" style="max-width:60px">
             </td>
             <td>
-              <input class="form-input auto-filled" readonly value="$142.50">
+              <input class="form-input auto-filled li-price" readonly value="$142.50"
+                data-insurance-price="142.50" data-selfpay-price="185.00" data-cost="78.00">
             </td>
             <td>
               <input class="form-input auto-filled" readonly value="$78.00">
             </td>
             <td class="margin-col">
-              <input class="form-input calc-field" readonly value="$129.00">
+              <input class="form-input calc-field li-margin" readonly value="$129.00">
             </td>
             <td>
-              <button class="btn btn-ghost btn-sm" style="color:var(--red)">✕</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="removeLineItem(this)">✕</button>
             </td>
           </tr>
 
           <!-- LINE ITEM 2 -->
-          <tr>
+          <tr class="line-item-row">
             <td>
               <select class="form-select">
                 <option>Sigvaris 860 Gauntlet — Medium</option>
@@ -635,26 +636,27 @@
               <input class="form-input auto-filled" readonly value="EA">
             </td>
             <td>
-              <input class="form-input" type="number" value="1">
+              <input class="form-input li-qty" type="number" value="1">
             </td>
             <td>
-              <input class="form-input auto-filled" readonly value="$58.90">
+              <input class="form-input auto-filled li-price" readonly value="$58.90"
+                data-insurance-price="58.90" data-selfpay-price="110.00" data-cost="31.00">
             </td>
             <td>
               <input class="form-input auto-filled" readonly value="$31.00">
             </td>
             <td class="margin-col">
-              <input class="form-input calc-field" readonly value="$27.90">
+              <input class="form-input calc-field li-margin" readonly value="$27.90">
             </td>
             <td>
-              <button class="btn btn-ghost btn-sm" style="color:var(--red)">✕</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="removeLineItem(this)">✕</button>
             </td>
           </tr>
 
           <!-- ADD ANOTHER -->
-          <tr class="add-line-row">
+          <tr class="add-line-row" id="add-line-row">
             <td colspan="8" style="padding:10px">
-              <button class="btn btn-ghost" style="font-size:13px">+ Add another product</button>
+              <button class="btn btn-ghost" style="font-size:13px" onclick="addLineItem()">+ Add another product</button>
             </td>
           </tr>
         </tbody>
@@ -1105,7 +1107,17 @@
 
 <script>
   var marginVisible = true;
+  var currentPaymentType = 'insurance';
 
+  // Pool of demo products for "Add another product"
+  var demoProducts = [
+    { name: 'Jobst Bella Lite Arm Sleeve — Beige', hcpcs: 'L8100', uom: 'EA', insurancePrice: '142.50', selfPayPrice: '98.00', cost: '44.50' },
+    { name: 'Medi Comfort Knee Sleeve — Medium',   hcpcs: 'A6549', uom: 'EA', insurancePrice: '87.30',  selfPayPrice: '149.00', cost: '52.00' },
+    { name: 'Sigvaris Cotton Thigh-High — Class I', hcpcs: 'A6531', uom: 'PR', insurancePrice: '64.10',  selfPayPrice: '112.00', cost: '38.00' },
+  ];
+  var demoProductIndex = 0;
+
+  // ── SCREEN NAVIGATION ──────────────────────────────────────────
   function showScreen(id, btn) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
@@ -1113,13 +1125,129 @@
     btn.classList.add('active');
   }
 
-  function selectRule(card) {
-    document.querySelectorAll('.rule-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    document.getElementById('panel-edit').style.display = '';
-    document.getElementById('panel-new').style.display = 'none';
+  // ── PAYMENT TYPE TOGGLE ────────────────────────────────────────
+  function setPaymentType(type) {
+    currentPaymentType = type;
+
+    // update toggle button states
+    document.getElementById('btn-insurance').classList.toggle('active', type === 'insurance');
+    document.getElementById('btn-selfpay').classList.toggle('active', type === 'selfpay');
+
+    // gray out / restore payer field
+    var payerSelect = document.getElementById('payer-select');
+    var payerLabel  = document.getElementById('payer-label');
+    if (type === 'selfpay') {
+      payerSelect.disabled = true;
+      payerSelect.style.opacity = '0.4';
+      payerLabel.style.opacity  = '0.4';
+    } else {
+      payerSelect.disabled = false;
+      payerSelect.style.opacity = '';
+      payerLabel.style.opacity  = '';
+    }
+
+    // update every line item's price and margin
+    document.querySelectorAll('.line-item-row').forEach(function(row) {
+      var priceInput  = row.querySelector('.li-price');
+      var marginInput = row.querySelector('.li-margin');
+      var qtyInput    = row.querySelector('.li-qty');
+      if (!priceInput) return;
+
+      var price = parseFloat(type === 'insurance'
+        ? priceInput.dataset.insurancePrice
+        : priceInput.dataset.selfpayPrice) || 0;
+      var cost  = parseFloat(priceInput.dataset.cost) || 0;
+      var qty   = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
+
+      priceInput.value = '$' + price.toFixed(2);
+      if (marginInput) {
+        marginInput.value = '$' + ((price - cost) * qty).toFixed(2);
+      }
+    });
+
+    updateSummary();
   }
 
+  // ── SUMMARY BAR ────────────────────────────────────────────────
+  function updateSummary() {
+    var totalBillable = 0;
+    var totalCost     = 0;
+
+    document.querySelectorAll('.line-item-row').forEach(function(row) {
+      var priceInput = row.querySelector('.li-price');
+      var qtyInput   = row.querySelector('.li-qty');
+      if (!priceInput) return;
+
+      var price = parseFloat(currentPaymentType === 'insurance'
+        ? priceInput.dataset.insurancePrice
+        : priceInput.dataset.selfpayPrice) || 0;
+      var cost  = parseFloat(priceInput.dataset.cost) || 0;
+      var qty   = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
+
+      totalBillable += price * qty;
+      totalCost     += cost  * qty;
+    });
+
+    var totalMargin = totalBillable - totalCost;
+    var marginPct   = totalBillable > 0 ? (totalMargin / totalBillable * 100) : 0;
+
+    var els = document.querySelectorAll('.summary-value');
+    if (els[0]) els[0].textContent = '$' + totalBillable.toFixed(2);
+    if (els[1]) els[1].textContent = '$' + totalCost.toFixed(2);
+    if (els[2]) els[2].textContent = '$' + totalMargin.toFixed(2);
+    if (els[3]) els[3].textContent = marginPct.toFixed(1) + '%';
+  }
+
+  // ── ADD LINE ITEM ──────────────────────────────────────────────
+  function addLineItem() {
+    var product = demoProducts[demoProductIndex % demoProducts.length];
+    demoProductIndex++;
+
+    var price = parseFloat(currentPaymentType === 'insurance'
+      ? product.insurancePrice
+      : product.selfPayPrice);
+    var cost  = parseFloat(product.cost);
+    var margin = price - cost;
+
+    var tr = document.createElement('tr');
+    tr.className = 'line-item-row';
+    tr.innerHTML =
+      '<td>' +
+        '<select class="form-select"><option>' + product.name + '</option></select>' +
+      '</td>' +
+      '<td><input class="form-input auto-filled" readonly value="' + product.hcpcs + '"></td>' +
+      '<td><input class="form-input auto-filled" readonly value="' + product.uom + '"></td>' +
+      '<td><input class="form-input li-qty" type="number" value="1" style="max-width:60px" oninput="updateSummary()"></td>' +
+      '<td>' +
+        '<input class="form-input auto-filled li-price" readonly value="$' + price.toFixed(2) + '"' +
+        ' data-insurance-price="' + product.insurancePrice + '"' +
+        ' data-selfpay-price="' + product.selfPayPrice + '"' +
+        ' data-cost="' + product.cost + '">' +
+      '</td>' +
+      '<td><input class="form-input auto-filled" readonly value="$' + cost.toFixed(2) + '"></td>' +
+      '<td class="margin-col">' +
+        '<input class="form-input calc-field li-margin" readonly value="$' + margin.toFixed(2) + '">' +
+      '</td>' +
+      '<td><button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="removeLineItem(this)">✕</button></td>';
+
+    // apply margin visibility
+    if (!marginVisible) {
+      tr.querySelectorAll('.margin-col').forEach(function(el) { el.style.display = 'none'; });
+    }
+
+    var addRow = document.getElementById('add-line-row');
+    addRow.parentNode.insertBefore(tr, addRow);
+    updateSummary();
+  }
+
+  // ── REMOVE LINE ITEM ───────────────────────────────────────────
+  function removeLineItem(btn) {
+    var row = btn.closest('tr');
+    row.parentNode.removeChild(row);
+    updateSummary();
+  }
+
+  // ── MARGIN TOGGLE ──────────────────────────────────────────────
   function toggleMargin() {
     marginVisible = !marginVisible;
     var cols = document.querySelectorAll('.margin-col');
@@ -1129,6 +1257,14 @@
     var btn = document.getElementById('margin-toggle');
     btn.textContent = marginVisible ? '👁' : '🙈';
     btn.title = marginVisible ? 'Hide margin from employees' : 'Show margin';
+  }
+
+  // ── FEE SCHEDULE ───────────────────────────────────────────────
+  function selectRule(card) {
+    document.querySelectorAll('.rule-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    document.getElementById('panel-edit').style.display = '';
+    document.getElementById('panel-new').style.display = 'none';
   }
 
   function newRule() {
@@ -1148,7 +1284,6 @@
   function cancelNewRule() {
     document.getElementById('panel-new').style.display = 'none';
     document.getElementById('panel-edit').style.display = '';
-    // re-select first rule as default
     var first = document.querySelector('.rule-card');
     if (first) first.classList.add('selected');
   }
