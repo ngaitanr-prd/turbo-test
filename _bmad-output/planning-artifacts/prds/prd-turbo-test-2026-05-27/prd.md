@@ -246,7 +246,13 @@ What this product will not do in this delivery. Each deferral is a deliberate se
 **Counter-metrics (do not optimize)**
 - **SM-C1:** Order submission speed should not be optimized at the expense of data completeness — a fast form with missing or wrong fields is worse than a slower correct one. Counterbalances SM-1 and SM-2.
 
-**Baseline note:** Alex's team should capture current figures for SM-1, SM-2, and SM-3 before deployment. Without a before number the after cannot be demonstrated.
+**Pre-launch baseline gate:** Alex's team must capture the following figures *before* the system goes live. Without a before number, SM-1, SM-2, and SM-3 cannot demonstrate improvement — the measurement value of this deployment depends on it.
+
+| Metric | What to capture | Source |
+|---|---|---|
+| SM-1 baseline | Orders processed per week over the last 4 weeks | Current Excel log |
+| SM-2 baseline | Sample of 10+ orders: date clinic order received → date sent to vendor | Manual tally |
+| SM-3 baseline | Pricing or data corrections per week over the last 4 weeks | Manual tally |
 
 ---
 
@@ -257,6 +263,8 @@ What this product will not do in this delivery. Each deferral is a deliberate se
 3. **OQ-3** — Multiplier behavior: does the Billable Amount always equal base rate × multiplier, or does this vary by Payer or product type? Needs clarification from Alex.
 4. **OQ-4** — Patient responsibility calculation: research indicates this requires inputs unlikely to be available at order entry (deductible met, coinsurance %, OOP max). Likely cannot be auto-calculated in v1. Needs clarification from Alex on whether it should be a manually entered field or deferred entirely.
 5. **OQ-5** *(closed)* — Geographic lookup key for DMEPOS fee schedules is the patient's ZIP code, not the state. Rural/non-rural classification and former Competitive Bidding Areas both use ZIP code. FR-3 and FR-4 updated accordingly.
+6. **OQ-6** — Submitted order value locking: when an Order is submitted, are the computed values (unit price, Billable Amount, Margin) locked as a point-in-time snapshot, or do they remain linked to live catalog and fee schedule data? If the fee schedule changes after submission, should historical Orders show the rate that applied at the time of submission? Needed before data model is designed.
+7. **OQ-7** — "Clinic order received" timestamp for SM-2: does the employee enter an Order into the system immediately upon receiving the clinic's order, or is there a meaningful lag between receipt and system entry? If there is a lag, SM-2 requires a separate "date received from clinic" field (in addition to FR-9's creation timestamp) to measure lead time accurately. Needed before §7 metrics can be fully instrumented.
 
 ---
 
@@ -264,3 +272,4 @@ What this product will not do in this delivery. Each deferral is a deliberate se
 
 - **§4.3 / FR-7** — Price overrides are not permitted in v1. Employees cannot manually change an auto-populated price.
 - **§4.4 / NFR-1** — All v1 users are internal employees with equivalent access. Role-based access control is deferred to a later stage.
+- **§4.1–4.2 / Delivery** — The data model (Product Catalog and Fee Schedule schema) is designed in parallel with the Order Entry Form, not as a prior sequential phase. The Form is the only v1 consumer of these tables; its field requirements must inform schema decisions before they are finalized. `[ASSUMPTION: designing schema before form requirements are concrete risks over-engineering for hypothetical needs]`
